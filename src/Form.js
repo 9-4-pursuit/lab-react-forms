@@ -20,17 +20,17 @@ function Form() {
   }
 
   function handleSubmit(event) {
+    event.preventDefault();
     if (!inputs || !selectOperation) {
       console.log("Invalid input.")
       setResult("Invalid input.");
-      setError(true);
+      return setError(true);
     }
     if (isNaN(result)) {
       console.log("Invalid input.")
       setResult("Invalid input.");
-      setError(true);
+      return setError(true);
     }
-    event.preventDefault();
     console.log(selectOperation, inputs)
     calculate(inputs);
   }
