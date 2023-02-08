@@ -35,6 +35,7 @@ function Form() {
         //check if Every input in the array is a number
         if (!numArr.every((current) => { return (!isNaN(Number(current))) }) || selectOption === "") {
             setResult("Invalid input.")
+
         } else {
             switch (selectOption) {
                 case "sum":
@@ -66,14 +67,15 @@ function Form() {
                             max[0] = num;
                             max[1] = numObj[num];
                         }
+                        console.log(numObj)
                     })
                     setResult(max[0]);
                     break;
                 default:
                     break;
             }
-            //reset the input
-            resetInputs(event)
+            //reset the inputs
+            resetInputs(event);
         }
 
     }
