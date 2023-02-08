@@ -19,8 +19,11 @@ function Form() {
         setSelectOption(event.target.value);
     }
 
-    function resetInputs() {
-        console.log("hi")
+    function resetInputs(event) {
+        event.target.values.value = "";
+        event.target.operation.value = "";
+        setNumbers("");
+        setSelectOption("");
     }
 
 
@@ -66,7 +69,11 @@ function Form() {
                     })
                     setResult(max[0]);
                     break;
+                default:
+                    break;
             }
+            //reset the input
+            resetInputs(event)
         }
 
     }
