@@ -5,12 +5,13 @@ import { useState } from "react";
 function Form() {
 
   const [selectOperation, setSelectOperation] = useState("");
-  const [inputs, setInputs] = useState(0);
-  // const [inputArr, setInputArr] = useState([])
+  const [inputs, setInputs] = useState("");
+  const [error, setError] = useState(false);
+  const [result, setResult] = useState(null);
 
   function handleInput(event) {
-    setInputs(event.target.value.split(',').map(Number));
     console.log(event.target.value)
+    setInputs(event.target.value.split(',').map(Number));
   };
 
   function handleSelectChange(event) {
@@ -19,22 +20,30 @@ function Form() {
   }
 
   function handleSubmit(event) {
+    if (!inputs || !selectOperation) {
+      console.log("Invalid input.")
+      setResult("Invalid input.");
+      setError(true);
+    }
+    if (isNaN(result)) {
+      console.log("Invalid input.")
+      setResult("Invalid input.");
+      setError(true);
+    }
     event.preventDefault();
-    console.log("Calculate", selectOperation, inputs)
-    let resultP = document.querySelector('#result p');
-    resultP.innerText = calculate(inputs);
+    console.log(selectOperation, inputs)
+    calculate(inputs);
   }
 
   // Function to do our calculations, broken up into 3 edge cases checks
   function calculate(numArr) {
     // Creat bucket for the end value
-    let resultNum = 0;
     if (selectOperation === "sum") {
       // Take ARR param and using REDUCE, we add up each element
-      resultNum = numArr.reduce((prev, curr) => prev + curr)
+      setResult(numArr.reduce((prev, curr) => prev + curr));
     } else if (selectOperation === "average") {
       // Same as above, then we divide sum total by length of array
-      resultNum = numArr.reduce((prev, curr) => prev + curr) / numArr.length;
+      setResult(numArr.reduce((prev, curr) => prev + curr) / numArr.length);
     } else if (selectOperation === "mode") {
       // Create an object to fill with properties equal the number found in the ARR, and how many times it has been found
       const obj = {};
@@ -48,7 +57,7 @@ function Form() {
       // Now we find the KEY with the highest VALUE
       let highestValue = 0;
       let highestValueKey = -Infinity;
-// Looping through OBJECT and looking at each key
+      // Looping through OBJECT and looking at each key
       for (let key in obj) {
         // Looking at VALUE of each KEY
         const value = obj[key];
@@ -59,26 +68,26 @@ function Form() {
         }
       }
       // Turn that ish back to a number, bc ALL KEYS ARE STRINGS
-      resultNum = Number(highestValueKey);
+      setResult(Number(highestValueKey));
     }
-    console.log(resultNum)
-    return resultNum;
+    console.log(result)
+    return result;
   }
 
   return (
     <>
-      <form>
-        <input id="values" name="values" type="text" onChange={handleInput} />
-        <select id="operation" name="operation" onChange={handleSelectChange}>
+      <form onSubmit={handleSubmit}>
+        <input id="values" name="values" type="text" onChange={handleInput} className={error ? "error" : ""} />
+        <select id="operation" name="operation" onChange={handleSelectChange} className={error ? "error" : ""}>
           <option value=""></option>
           <option value="sum">sum</option>
           <option value="average">average</option>
           <option value="mode">mode</option>
         </select>
-        <button type="submit" onClick={handleSubmit}>Calculate</button>
+        <button type="submit">Calculate</button>
       </form>
       <section id="result">
-        <p></p>
+        <p>{result}</p>
       </section>
     </>
   );
