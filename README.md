@@ -77,6 +77,6 @@ There are additional challenges in place should you want to use them.
 - If the input is valid, clear the input boxes after the "Calculate" button is clicked.
 - If the input is invalid, _do not_ clear the input boxes after the "Calculate" button is clicked.
 - Add a class of "error" to both the `input` and `select` elements if the input is invalid.
-  - If the input is then changed so that it is valid, remove those classes the next time the "Calculate" button is clicked.
+  - If the input is then changed so that it is valid, remoe those cvlasses the next time the "Calculate" button is clicked.
 
 ![Example of the the bonus error styling.](./assets/error.gif)
