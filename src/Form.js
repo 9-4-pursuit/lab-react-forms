@@ -10,75 +10,81 @@ function Form() {
   const [result, setResult] = useState(null);
 
   function handleInput(event) {
-    console.log(event.target.value)
-    setInputs(event.target.value.split(',').map(Number));
+    // console.log(event.target.value)
+    setInputs(event.target.value);
   };
 
   function handleSelectChange(event) {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setSelectOperation(event.target.value);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (!inputs || !selectOperation) {
-      console.log("Invalid input.")
-      setResult("Invalid input.");
-      return setError(true);
-    }
-    if (isNaN(result)) {
-      console.log("Invalid input.")
-      setResult("Invalid input.");
-      return setError(true);
-    }
     console.log(selectOperation, inputs)
     calculate(inputs);
+    resetForm();
+  }
+
+  function handleError() {
+    setError(true);
+    setResult("Invalid input.")
+  }
+
+  function resetForm() {
+    setInputs("");
+    setSelectOperation("")
   }
 
   // Function to do our calculations, broken up into 3 edge cases checks
-  function calculate(numArr) {
+  function calculate() {
+    let total = 0;
+    const modeObj = {};
+    const numArr = inputs.split(",");
+
     // Creat bucket for the end value
-    if (selectOperation === "sum") {
-      // Take ARR param and using REDUCE, we add up each element
-      setResult(numArr.reduce((prev, curr) => prev + curr));
-    } else if (selectOperation === "average") {
-      // Same as above, then we divide sum total by length of array
-      setResult(numArr.reduce((prev, curr) => prev + curr) / numArr.length);
-    } else if (selectOperation === "mode") {
-      // Create an object to fill with properties equal the number found in the ARR, and how many times it has been found
-      const obj = {};
-      numArr.forEach(number => {
-        if (!obj[number]) {
-          obj[number] = 1;
-        } else {
-          obj[number] += 1;
-        }
-      });
-      // Now we find the KEY with the highest VALUE
-      let highestValue = 0;
-      let highestValueKey = -Infinity;
-      // Looping through OBJECT and looking at each key
-      for (let key in obj) {
-        // Looking at VALUE of each KEY
-        const value = obj[key];
-        // If that VALUE, is bigger than highestValue, replace it, also save the KEY of that newly found highest VALUE
-        if (value > highestValue) {
-          highestValue = value;
-          highestValueKey = key;
-        }
+    if (selectOperation) {
+      numArr.forEach(num => total += Number(num));
+
+      if (selectOperation === "average") {
+        // Same as above, then we divide sum total by length of array
+        total /= numArr.length;
+      } else if (selectOperation === "mode") {
+        numArr.forEach(number => {
+          if (modeObj[number]) {
+            modeObj[number] += 1;
+          } else {
+            modeObj[number] = 1;
+          }
+        });
+        total = Object.keys(modeObj).reduce((a, b) => modeObj[a] > modeObj[b] ? a : b);
       }
-      // Turn that ish back to a number, bc ALL KEYS ARE STRINGS
-      setResult(Number(highestValueKey));
+      setResult(total);
+    }
+    if (!selectOperation || !inputs || isNaN(total)) {
+      handleError();
+    } else {
+      setError(false);
+      resetForm();
     }
     console.log(result)
-    return result;
   }
+
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <input id="values" name="values" type="text" onChange={handleInput} className={error ? "error" : ""} />
-        <select id="operation" name="operation" onChange={handleSelectChange} className={error ? "error" : ""}>
+        <input
+          id="values"
+          name="values"
+          type="text"
+          onChange={handleInput}
+          className={error ? "error" : ""} />
+        <select
+          id="operation"
+          name="operation"
+          onChange={handleSelectChange}
+          className={error ? "error" : ""}>
           <option value=""></option>
           <option value="sum">sum</option>
           <option value="average">average</option>
