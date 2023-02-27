@@ -2,47 +2,88 @@ import React from "react";
 import "./Form.css";
 import { useState } from "react";
 
+function Form({ setResult }) {
+  //useState to set values, operation, error
+  const [values, setValues] = useState("");
+  const [operation, setOperation] = useState("");
+  const [error, setError] = useState("");
 
+  function handleOperations() {
+    let arrVal = values.split(",");
+    //use reduce to add all of the values
+    let total = arrVal.reduce(
+      (previous, current) => previous + Number(current),
+      0
+    );
 
-function Form() {
+    if (operation === "sum") {
+      return total;
+    }
+    if (operation === "average") {
+      return total / arrVal.length;
+    }
+    if (operation === "mode") {
+      let obj = {};
+      let seen = 0;
 
-  const [textEntry, updateText] = useState("");
-  const [selectOption, updateSelectOption] = useState("");
+      arrVal.forEach((val) => {
+        if (!obj[val]) {
+                obj[val] = 1;
+        } else {
+                obj[val] += 1;
+        }
+      });
 
-  function updateTextEntry(event) {
-    updateText(event.target.value)
+              for (let val in obj) {
+        if (obj[val] > seen) {
+                seen = obj[val];
+              total = val;
+        }
+      }
+    }
+              return total;
   }
 
-  function updateSelectOptionEntry(event) {
-    updateSelectOption(event.target.value)
-  }
+              function handleFormSubmit(event) {
+                event.preventDefault();
 
-  function numberTest(currentValue) {
-    return !isNaN(Number(currentValue));
+              if (isNaN(handleOperations()) || !values || !operation) {
+                setError("error");
+              setResult("Invalid input.");
+    } else {
+                setResult(handleOperations());
+              setOperation("");
+              setValues("");
+              setError("");
+    }
   }
-  function onSubmitCalculate(event) {
-    event.preventDefault();
-    const arrayInputs
-    const
-
-  }
-  return (
-    <>
-      <form>
-        <input onChange={updateTextEntry}id="values" name="values" type="text" />
-        <select onChange={updateSelectOptionEntry} id="operation" name="operation">
-          <option value=""></option>
-          <option value="sum">sum</option>
-          <option value="average">average</option>
-          <option value="mode">mode</option>
-        </select>
-        <button onSubmit={onSubmitCalculate} type="submit">Calculate</button>
-      </form>
-      <section id="result">
-        <p></p>
-      </section>
-    </>
-  );
+              return(
+              <form onSubmit={handleFormSubmit}>
+                <label htmlFor="values"></label>
+                <input
+                  className={error}
+                  id="values"
+                  name="values"
+                  type="text"
+                  value={values}
+                  onChange={(e) => setValues(e.target.value)}
+                />
+                <br />
+                <label htmlFor="operation"></label>
+                <select
+                  className={error}
+                  id="operation"
+                  name="operation"
+                  value={operation}
+                  onChange={(e) => setOperation(e.target.value)}
+                >
+                  <option value=""></option>
+                  <option value="sum">sum</option>
+                  <option value="average">average</option>
+                  <option value="mode">mode</option>
+                </select>
+                <button type="submit">Calculate</button>    </form>
+              );
 }
 
-export default Form;
+              export default Form;
