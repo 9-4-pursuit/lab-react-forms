@@ -3,59 +3,100 @@ import "./Form.css";
 
 function Form() {
 
-  const [selectOption, setSelectOption] = useState("");
-  const [num, setNumbers] = useState(0);
-  const [input, setInput] = useState({
-    num: "",
-    calculate: "",
-  });
+  const [numInput, setNumInput] = useState("");
 
-  function handleSelectChange(event) {
-    setSelectOption(event.target.value);
+  const [calculateInput, setCalculateInput] = useState("operation");
+
+  const [result, setResult] = useState("");
+
+  function handleSelection(event) {
+    setCalculateInput(event.target.value);
   }
 
-  function handleNumberInputChange(event) {
-    setNumbers(event.target.value);
+  function handleNumInput(event) {
+    setNumInput(event.target.value);
+  }
+
+  function resetForm() {
+    
+    setNumInput("");
+    setCalculateInput("");
   }
 
   function handleCalculate(event) {
     event.preventDefault();
 
-    // if (input.num.value < 1 || input.calculate.value < 1) {
+    let arrNumInput = numInput.split(",");
+    let total = 0;
 
-    //     let p = document.createElement('p');
-    //     document.querySelector('form').appendChild(p);
-    //     p.textContent = "invalid input."
-   
-    // }
+    if (calculateInput === "sum") {
 
-    resetForm();
-  }
+      arrNumInput.forEach(num => total += Number(num))
+      setResult(total);
+    }
 
-  function handleInput(event) {
-    setInput({
-      ...input, [event.target.id]: event.target.value
-    });
-  }
+    else if (calculateInput === "average") {
 
-  function resetForm() {
-    setInput({
-      num: "",
-      calculate: "",
-    });
+      arrNumInput.forEach(num => total += Number(num));
+      setResult(total / arrNumInput.length);
+    }
+
+    else if (calculateInput === "mode") {
+
+      let modeObj = {};
+      let popularNum = 0;
+      let popularNumKey = -Infinity;
+
+      arrNumInput.forEach(num => {
+
+        if (!modeObj[num]) {
+          modeObj[num] = 1;
+        }
+        else {
+          modeObj[num] += 1;
+        }
+      })
+
+      for (let key in modeObj) {
+
+        const value = modeObj[key];
+
+        if (value >= popularNum && Number(key) > popularNumKey) {
+
+          popularNum = value;
+
+          popularNumKey = Number(key)
+        }
+      }
+
+      setResult(popularNumKey);
+    }
+
+    if (numInput.length < 1 || calculateInput === "operation" || isNaN(result)) {
+      setResult("Invalid input.")
+    }
+
+    if (result != "Invalid input.") {
+      resetForm();
+    }
   }
 
   return (
-    <form onSubmit={handleCalculate}>
-      <input id="values" name="values" type="text" onChange={handleNumberInputChange}/>
-      <select id="operation" name="operation" onChange={handleSelectChange}>
-        <option value=""></option>
-        <option value="sum">sum</option>
-        <option value="average">average</option>
-        <option value="mode">mode</option>
+    <>
+    <form>
+      <input id="numbers" name="numbers" type="text" onChange={handleNumInput} />
+      <select id="calculation" name="calculation" placeholder="#" onChange={handleSelection}>
+        <option value="operation" name="operation" id="operation"> Operation </option>
+        <option id="sum" name="sum" value="sum">sum</option>
+        <option id="average" name="average" value="average">average</option>
+        <option id="mode" name="mode" value="mode">mode</option>
       </select>
-      <button type="submit">Calculate</button>
+      <button type="submit" onClick={handleCalculate}> Calculate! </button>
     </form>
+    <section>
+      <p> {result} </p>
+    </section>
+    </>
   );
 }
 
