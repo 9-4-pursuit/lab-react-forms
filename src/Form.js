@@ -17,6 +17,9 @@ function Form() {
     if (input.length === 0) {
       setError("Invalid input.");
     }
+    if (typeof input !== "number") {
+      setError("Invalid input.");
+    }
     return;
   };
   console.log(input);
