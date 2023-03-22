@@ -38,17 +38,21 @@ function Form() {
     event.preventDefault();
     setError(false) // resetting the Error state
 
-    //guard clause one
+    //guard clause one, for operation
     if(!selectOption){
     setError(true);
     return;
     }
 
-    //guard clause two
-    if(/\D/.test(values)) {
+    //guard clause two, for numbers only
+    // if (values.trim().length === 0 || values[values.length - 1] === ',' || /[-,^0-9,]/.test(values)) {
+
+
+    const regex = /^[0-9 ,]+$/; // matches numbers, spaces, and commas
+    if (!regex.test(values)) {
       setError(true);
       return;
-    }
+      }
     console.log("Form Submitted!");
 
     let operation = selectOption
