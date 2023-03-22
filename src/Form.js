@@ -45,9 +45,6 @@ function Form() {
     }
 
     //guard clause two, for numbers only
-    // if (values.trim().length === 0 || values[values.length - 1] === ',' || /[-,^0-9,]/.test(values)) {
-
-
     const regex = /^[0-9 ,]+$/; // matches numbers, spaces, and commas
     if (!regex.test(values)) {
       setError(true);
