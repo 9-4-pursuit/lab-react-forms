@@ -6,25 +6,12 @@ import "./Form.css";
 function Form() {
 
   const [values, setValues] = useState("")
-  const [result, setResult] = useState("")
   const [selectOption, setSelectOption] = useState("");
 
-
-  const [error, setError] = useState(false)
-
-
-  /*Guard Clause  - move to calculate button
-    if any letters are in the input, return "Invalid input."
-    if no operation is selected, return "Invalid input."
-*/
-
-
-
-
+ 
 
   function handleInputChange(event) {
     setValues(event.target.value);
-
   }
   
   function handleSelectChange(event){
@@ -32,26 +19,9 @@ function Form() {
     console.log("selectOption is ", event.target.value)
   }
 
-
-
   function handleSubmitEvent(event){
     event.preventDefault();
-    setError(false) // resetting the Error state
-
-    //guard clause one, for operation
-    if(!selectOption){
-    setError(true);
-    return;
-    }
-
-    //guard clause two, for numbers only
-    const regex = /^[0-9 ,]+$/; // matches numbers, spaces, and commas
-    if (!regex.test(values)) {
-      setError(true);
-      return;
-      }
     console.log("Form Submitted!");
-
     let operation = selectOption
     console.log(operation)
     if (operation === "sum") {
@@ -67,13 +37,14 @@ function Form() {
     function sumNumbers(values){
       //split the inputs into individual numbers and sum them
       const newNumbers = values.split(",").map(Number);
+      handleInputChange(values)
       let sum = 0
       for (let i=0; i < newNumbers.length; i++) {
         sum += newNumbers[i];
       }
-      console.log(sum);
-      setResult(sum);
-      setValues("");
+      console.log(sum)
+      let result = sum
+      return result
     }
 
         //number that appears most often
@@ -94,9 +65,9 @@ function Form() {
         count = mode[item];
       }
       }
-      console.log(max);
-      setResult(max);
-      setValues("");
+      console.log(max)
+      let result = max
+      return result
     }
 
     //add all numbers and divide by number of numbers
@@ -107,19 +78,22 @@ function Form() {
       let sum=0;
       for(let i=0; i < newNumbers.length; i++) {
         sum+= newNumbers[i];
+        console.log(i)
       }
       console.log(sum);
-      console.log(sum/divider);
-      setResult(sum/divider);
-      setValues("");
+      console.log(sum/divider)
+      let result = sum/divider
+      return result
     }
+
+    console.log("This is line 108")
 }
 
 
   return (
     <>
       <form onSubmit={handleSubmitEvent}>
-        <input id="values" className="values" type="text" value={values} onChange={handleInputChange}/>
+        <input id="values" className="values" type="text" />
         <select id="operation" className="operation" onChange={handleSelectChange}>
           <option value=""></option>
           <option value="sum">sum</option>
@@ -128,16 +102,14 @@ function Form() {
         </select>
         <button type="submit">Calculate</button>
       </form>
-      {error && (
-        <section id="error">
-          <p>Invalid input.</p>
-        </section>
-      )}
       <section id="result">
-        <p>Answer: {result}</p>
+        <p>result to go here</p>
       </section>
     </>
   );
 }
 
 export default Form;
+
+
+
