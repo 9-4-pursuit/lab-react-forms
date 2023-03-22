@@ -150,3 +150,18 @@ function handleSubmitEvent(event){
 }
 
 export default Form;
+===================
+3/21/23
+Got rid of 
+
+  // const [operation, setOperation] = useState("")
+  // const [value, setValue] = useState("")
+
+  and
+
+  function invalidInput (values) {
+    selectOption("")
+    console.log("invalid input")
+    return "Invalid input."
+  }
+  //   const allowable = "all"

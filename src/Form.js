@@ -5,22 +5,19 @@ import "./Form.css";
 
 function Form() {
 
-  // const [operation, setOperation] = useState("")
-  // const [value, setValue] = useState("")
   const [values, setValues] = useState("")
   const [result, setResult] = useState("")
   const [selectOption, setSelectOption] = useState("");
 
-  // event.preventDefault()
-  // const [error, setError] = useState(false)
-  function invalidInput (numbers) {}
-  //   const allowable = "all"
 
-  /*Guard Clause  
+  const [error, setError] = useState(false)
+
+
+  /*Guard Clause  - move to calculate button
     if any letters are in the input, return "Invalid input."
     if no operation is selected, return "Invalid input."
 */
-  
+
 
 
 
@@ -39,7 +36,21 @@ function Form() {
 
   function handleSubmitEvent(event){
     event.preventDefault();
+    setError(false) // resetting the Error state
+
+    //guard clause one
+    if(!selectOption){
+    setError(true);
+    return;
+    }
+
+    //guard clause two
+    if(/\D/.test(values)) {
+      setError(true);
+      return;
+    }
     console.log("Form Submitted!");
+
     let operation = selectOption
     console.log(operation)
     if (operation === "sum") {
@@ -116,8 +127,12 @@ function Form() {
         </select>
         <button type="submit">Calculate</button>
       </form>
+      {error && (
+        <section id="error">
+          <p>Invalid input.</p>
+        </section>
+      )}
       <section id="result">
-        {/* <p>You wanted to know the {selectOption} of {values}.</p> */}
         <p>Answer: {result}</p>
       </section>
     </>
